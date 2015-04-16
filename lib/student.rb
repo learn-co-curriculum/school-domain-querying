@@ -1,77 +1,91 @@
 class Student
-  ATTRIBUTES = {
-    :id => "INTEGER PRIMARY KEY",
-    :name => "TEXT",
-    :tagline => "TEXT",
-    :github =>  "TEXT",
-    :twitter =>  "TEXT",
-    :blog_url =>  "TEXT",
-    :image_url  => "TEXT",
-    :biography =>  "TEXT"
-  }
-  # ATTRIBUTES.keys.each do |attribute|
-  #   attr_accessor attribute
-  # end
-  attr_accessor *ATTRIBUTES.keys
+  attr_accessor :id, :name, :tagline, :github, :twitter, :blog_url, :image_url, :biography
 
   def self.create_table
     sql = <<-SQL
     CREATE TABLE IF NOT EXISTS students (
-        #{schema_definition}
-        )
+      id INTEGER PRIMARY KEY,
+      name TEXT,
+      tagline TEXT,
+      github TEXT,
+      twitter TEXT,
+      blog_url TEXT,
+      image_url TEXT,
+      biography TEXT
+    )
     SQL
+
     DB[:conn].execute(sql)
-  end
-
-  def self.schema_definition
-    ATTRIBUTES.collect{|k,v| "#{k} #{v}"}.join(",")
-  end
-
-  def sql_for_update
-    ATTRIBUTES.keys[1..-1].collect{|k| "#{k} = ?"}.join(",")
   end
 
   def self.drop_table
     sql = "DROP TABLE IF EXISTS students"
     DB[:conn].execute(sql)
-  end    
+  end
 
   def self.new_from_db(row)
     self.new.tap do |s|
-      row.each_with_index do |value, index|
-        s.send("#{ATTRIBUTES.keys[index]}=", value)
-      end
+      s.id = row[0]
+      s.name =  row[1]
+      s.tagline = row[2]
+      s.github =  row[3]
+      s.twitter =  row[4]
+      s.blog_url =  row[5]
+      s.image_url = row[6]
+      s.biography = row[7]
     end
   end
 
   def self.find_by_name(name)
-    sql = "SELECT * FROM students WHERE name = ?"
-      result = DB[:conn].execute(sql,name)[0] #[]    
-      self.new_from_db(result) if result
+    sql = <<-SQL
+      SELECT *
+      FROM students
+      WHERE name = ?
+      LIMIT 1
+    SQL
+
+    DB[:conn].execute(sql,name).map do |row|
+      self.new_from_db(row)
+    end.first
   end
 
   def self.find_by_id(id)
-    sql = "SELECT * FROM students WHERE id = ?"
-      result = DB[:conn].execute(sql,id)[0] #[]    
-      self.new_from_db(result) if result
+    sql = <<-SQL
+      SELECT *
+      FROM students
+      WHERE id = ?
+      LIMIT 1
+    SQL
+
+    DB[:conn].execute(sql,name).map do |row|
+      self.new_from_db(row)
+    end.first
   end
 
   def attribute_values
-    ATTRIBUTES.keys[1..-1].collect{|key| self.send(key)}
+    [name, tagline, github, twitter, blog_url, image_url, biography]
   end
 
   def insert
-    sql = "INSERT INTO students (#{ATTRIBUTES.keys[1..-1].join(",")}) VALUES (?,?,?,?,?,?,?)"
-    DB[:conn].execute(sql, *attribute_values)
+    sql = <<-SQL
+      INSERT INTO students
+      (name,tagline,github,twitter,blog_url,image_url,biography)
+      VALUES
+      (?,?,?,?,?,?,?)
+    SQL
+    DB[:conn].execute(sql, attribute_values)
 
     @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
   end
 
-
   def update
-    sql = "UPDATE students SET #{sql_for_update} WHERE id = ?"
-    DB[:conn].execute(sql, *attribute_values, id)
-  end    
+    sql = <<-SQL
+      UPDATE students
+      SET name = ?,tagline = ?,github = ?,twitter = ?,blog_url = ?,image_url = ?,biography = ?
+      WHERE id = ?
+    SQL
+    DB[:conn].execute(sql, attribute_values, id)
+  end
 
   def persisted?
     !!self.id
@@ -83,15 +97,15 @@ class Student
 
   def courses
     sql = <<-SQL
-    SELECT courses.* 
-    FROM students 
-    JOIN registrations 
-    ON students.id = registrations.student_id 
-    JOIN courses 
-    ON courses.id = registrations.course_id 
+    SELECT courses.*
+    FROM students
+    JOIN registrations
+    ON students.id = registrations.student_id
+    JOIN courses
+    ON courses.id = registrations.course_id
     WHERE students.id = ?
     SQL
-    result = DB[:conn].execute(sql, self.id) 
+    result = DB[:conn].execute(sql, self.id)
     result.map do |row|
       Course.new_from_db(row)
     end
