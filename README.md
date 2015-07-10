@@ -1,7 +1,7 @@
 ##Objectives: 
 1. Build a simple Object Relational Mapper.
 2. Learn what SQL joins are and how to use them.
-3. Learn how to Create, Read, Update and Delete data (CRUD).
+3. Learn how to Creajjte, Read, Update and Delete data (CRUD).
 
 ###Right now your ORM Student class has methods that will:
 
