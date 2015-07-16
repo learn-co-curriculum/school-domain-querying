@@ -1,4 +1,4 @@
-##Objectives: 
+##0bjectives: 
 1. Build a simple Object Relational Mapper.
 2. Learn what SQL joins are and how to use them.
 3. Learn how to Create, Read, Update and Delete data (CRUD).
