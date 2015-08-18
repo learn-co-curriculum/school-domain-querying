@@ -16,7 +16,7 @@
 After completing this lab, your Course, Department and Registration classes will have similar functionality and the abilitiy to talk to each other. In order to make this happen, your tables will use <a href="http://www.sql-join.com/">SQL joins</a>. You will be able to do things like find all courses by department name or add a course to a particular student.
 
 ###A Note On Integration Tests
-<a href="Integration testing - Wikipedia, the free encyclopedia">Integration testing</a> tests how your models interact with each other.
+<a href="https://en.wikipedia.org/wiki/Integration_testing">Integration testing</a> tests how your models interact with each other.
 In order for the integration tests to pass completely, you will need to build methods that relate Course and Student to Department. They will go in the Course and Student classes.
 
 ###Department 
