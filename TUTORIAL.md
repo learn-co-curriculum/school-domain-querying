@@ -1,7 +1,15 @@
 # Guide to Solving and Reviewing School Domain Querying
 
-##Overview
-Before you get started, the first thing you should do is read through the README. The README tells you that there is a `lib/student.rb` file that is built out and to use it as a guide. Open `lib/student.rb` and read through it, as well as the specs, to get a high level overview of what your end goal is. Our goal for this lab is to create an ORM - an Object Relational Mapper. This means we'll be creating a Ruby interface for our database, wrapping SQL statements in methods that perform basic CRUD operations. Now that you have a sense of direction, go ahead and  run the test suite by typing `rspec` into the terminal. As expected, the student class completely passes since it was already created for you. 
+## Overview
+
+ Our goal for this lab is to create an ORM - an Object Relational Mapper. This means we'll be creating a Ruby interface for our database, wrapping SQL statements in methods that perform basic CRUD (Create, Read, Update, Delete) operations. Each of our classes will correspond with a table in our database. We'll be able to create new instances of the classes that align with rows in the database.
+
+Before you get started, the first thing you should do is read through the README. The README tells you that there is a `lib/student.rb` file that is built out. We'll use this file as a guide to build out similar functionality in our `department` and `course` classes. 
+
+
+ Open `lib/student.rb` and read through it, as well as the specs, to get a high level overview of what your end goal is.
+
+Now that you have a sense of direction, go ahead and  run the test suite by typing `rspec` into the terminal. As expected, the student class completely passes since it was already created for you. 
 
 The first failing test is in our Course class, `undefined method create_table for Course:Class.` 
 
@@ -38,9 +46,9 @@ def self.drop_table
   DB[:conn].execute(sql)
 end
 ```
-Run `rspec` and your will see the next error, `undefined method insert`. Again, lets take a look at our `student.rb` file and see if we have reusable code. 
+Run `rspec` again and the `create_table` and `drop_table` specs should be passing. 
 
-It looks like we have an `insert` method built for us so lets modify that and use it. Let's also create a helper method called `attribute_values` to keep everything organized. Instead of typing out all of the values in our insert method, we can call the `attribute_values` method instead.
+Our next error is , `undefined method insert`. Again, lets take a look at our `student.rb` file and see if we have reusable code. It looks like we have an `insert` method built for us so lets modify that and use it. Let's also create a helper method called `attribute_values` to keep everything organized. Instead of typing out all of the values in our insert method, we can call the `attribute_values` method instead.
 
 ```ruby
 def attribute_values
