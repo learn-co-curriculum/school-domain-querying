@@ -58,4 +58,4 @@ end
 * [Integration testing](https://en.wikipedia.org/wiki/Integration_testing)
 
 
-<a href='https://learn.co/lessons/school-domain-querying' data-visibility='hidden'>View this lesson on Learn.co</a>
+<p data-visibility='hidden'>View <a href='https://learn.co/lessons/school-domain-querying' title='Objectives:'>Objectives:</a> on Learn.co and start learning to code for free.</p>
